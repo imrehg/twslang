@@ -3,6 +3,7 @@ var express = require('express')
   , ejs = require('ejs')
   , mongoose = require('mongoose')
   , uuid = require('node-uuid')
+  , async = require('async')
   ;
 
 var Schema = mongoose.Schema
@@ -112,6 +113,34 @@ app.post("/addword", function(req, res) {
 		 newword: wordData
 	       });
 });
+
+app.get("/monitor", function(req, res) {
+    async.parallel([
+	function(cb){
+	    EventModel.find({"event": "checkWord"}, function(err, docs) {
+		var wordviews = docs.length;
+		cb(null, {"Word views": wordviews});
+	    });
+	},
+	function(cb){
+	    EventModel.find({"event": "addWord"}, function(err, docs) {
+		var wordviews = docs.length;
+		cb(null, {"Words added": wordviews});
+	    });
+	}
+    ],
+		   function(err, results) {
+		       var out = '<html><head><title>Metrics</title></head><body>';
+		       for (i in results) {
+			   for (resname in results[i]) {
+			       out += "<strong>" + resname + ":</strong> " + results[i][resname] + "<br>";
+			   }
+		       }
+		       out += "</body><html>"
+		       res.send(out);
+		   });
+});
+
 
 // Main page
 app.get("/", function(req, res) {
