@@ -120,7 +120,7 @@ app.get("/", function(req, res) {
 	if (!err) {
 	    console.log(util.inspect(docs))
 	    res.render('index.ejs',
-		       { title: "TaiwanSlang",
+		       { title: "台灣俚語字典 TaiwanSlang",
 			 words: docs
 		       });
 	}
