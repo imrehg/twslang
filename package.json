@@ -1,0 +1,22 @@
+{
+  "name":    "twslang",
+  "version": "0.0.1",
+  "description": "Taiwanese slang",
+  "author": {
+    "name": "Gergely Imreh",
+    "email": "imrehg@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/imrehg/twslang.git"
+  },
+  "dependencies": {
+    "ejs":       "0.7.2"
+  , "express":   "2.5.10"
+  , "mongoose": "2.7.0"
+  },
+  "engines": {
+    "node": "0.8.x"
+  , "npm":  "1.1.x"
+  }
+}
