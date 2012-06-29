@@ -53,7 +53,9 @@ app.configure(function() {
 
 function checkSetId(req, res) {
     if (!req.cookies.id) {
-	res.cookie('id', uuid.v4());
+	var newid = uuid.v4()
+	res.cookie('id', newid);
+	addEvent("newVisit", "by id:"+newid);
     } else {
 	console.log(req.cookies.id);
     }
