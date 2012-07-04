@@ -1,0 +1,59 @@
+ <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">台灣俚語字典 TaiwanSlang</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+<% if (typeof newword !== 'undefined') { %>
+<div class="alert alert-block alert-success">
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <h4 class="alert-heading">Successfully added <%= newword.word %>.</h4>
+  Continue adding words here, or go back to the <a href="/">main page</a>.
+</div>
+<% } %>
+
+<section id="main">
+<div class="page-header"><h1>Add new definition for: <em><%= word.word %></em></br><small>Things that cannot be found in "normal" dictionaries.</small></div>
+<form class="form-horizontal" method="post" action="/adddef/<%= word._id %>">
+<fieldset>
+	 <div class="control-group">
+            <label class="control-label" for="word">Word/Expression<br>(in Chinese)</label>
+            <div class="controls">
+              <span class="input-xlarge uneditable-input"><%= word.word %></span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="description">Definition<br>(in Chinese)</label>
+            <div class="controls">
+              <textarea class="input-xlarge" id="description" rows="3" name="define"></textarea>
+              <p class="help-block">Define the meaning of this word or expression</p>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="examples">Example usage<br>(in Chinese)</label>
+            <div class="controls">
+              <textarea class="input-xlarge" id="examples" rows="5" name="example"></textarea>
+              <p class="help-block">Give one ore more example sentences using this word or expression.</p>
+            </div>
+          </div>
+          <div class="form-actions row">
+            <div class="span2">
+            <button type="submit" class="btn btn-info"><i class="icon-ok icon-white"></i><strong>Add definition</strong></button>
+	    </div>
+            <div class="span2">
+            <a href="/word/<%= word._id %>"><i class="icon-remove"></i><strong>Go back</strong></a>
+            </div>
+          </div>
+        </fieldset>
+</form>
+
+</section>
+
+<div class="container">
