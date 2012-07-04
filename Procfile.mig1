@@ -1,0 +1,1 @@
+web: node extra/db/migration01.js
