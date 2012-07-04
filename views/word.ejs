@@ -27,7 +27,10 @@
 <div class="row wordshow">
      <div class="span1 wordheader">Definition:</div>
      <div class="span10"><%= word.defs[c].def %></div>
-     <div class="span1"><a href="#"><%= word.defs[c].uv %> <i class="icon-thumbs-up"></i></a> <a href="#"><%= word.defs[c].dv %> <i class="icon-thumbs-down"></i></a></div>
+     <!-- <div class="span1"> -->
+     <!--   <a href="#" class="vote up" defid="<%= word.defs[c]._id%>"><%= word.defs[c].uv %> <i class="icon-thumbs-up"></i></a> -->
+     <!--   <a href="#" class="vote down" defid="<%= word.defs[c]._id%>"><%= word.defs[c].dv %> <i class="icon-thumbs-down"></i></a> -->
+     <!-- </div> -->
 </div>
 <div class="row wordshow">
      <div class="span1 wordheader">Examples:</div>
@@ -39,3 +42,16 @@
      <div class="span12"><a class="btn btn-info" href="/adddef/<%= word._id %>"><i class="icon-edit icon-white"></i>Add new definition</a></div>
 </div>
 </section>
+
+<script type="text/javascript">
+  $(".vote").click(function() {
+     var vote = $(this);
+     var did = vote.attr('defid'),
+         wid = "<%= word._id %>";
+     var up = vote.hasClass('up') ? true : false;
+     $.post('/vote/'+wid+'/'+did, {up: up}, 
+          function(data) {
+            console.log(data);
+     });
+  });
+</script>
