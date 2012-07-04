@@ -15,23 +15,27 @@
   <h1>The Taiwanese Slang Dictionary</h1>
   <p class="lead"></p>
   <div class="row">
-   <div class="span2"><a class="btn btn-primary" href="/addWord">Add new word</a></div>
-   <div class="span2"><a class="btn btn-inverse" href="/">Back to dictionary</a></div>
+   <!-- <div class="span2"><a class="btn btn-info" href="/addWord"><i class="icon-plus icon-white"></i>Add new word</a></div> -->
+   <div class="span2"><a class="btn btn-inverse" href="/"><i class="icon-backward icon-white"></i>Back to dictionary</a></div>
    <!-- <div class="span2"><a class="btn btn-warning" href="/random">Go to random word</a></div> -->
   </div>
 </header>
 
 <section id="main">
 <div class="page-header"><h1><%= word.word %></h1></div>
-<div class="row">
-     <div class="span1"><strong>Definition:</strong></div>
-     <div class="span11"><%= word.define %></div>
+<% for (var c = 0; c < word.defs.length; c++) { %>
+<div class="row wordshow">
+     <div class="span1 wordheader">Definition:</div>
+     <div class="span10"><%= word.defs[c].def %></div>
+     <div class="span1"><a href="#"><%= word.defs[c].uv %> <i class="icon-thumbs-up"></i></a> <a href="#"><%= word.defs[c].dv %> <i class="icon-thumbs-down"></i></a></div>
 </div>
-<div class="row">
-     <div class="span1"><strong>Examples:</strong></div>
-     <div class="span11"><i><%= word.example %></></div>
+<div class="row wordshow">
+     <div class="span1 wordheader">Examples:</div>
+     <div class="span10"><i><%= word.defs[c].ex %></i></div>
+</div>
+<hr width="100%">
+<% } %>
+<div class="row ">
+     <div class="span12"><a class="btn btn-info" href="/adddef/<%= word._id %>"><i class="icon-edit icon-white"></i>Add new definition</a></div>
 </div>
 </section>
-
-
-<div class="container">

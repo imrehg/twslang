@@ -25,13 +25,18 @@ var EventSchema = new Schema({
     msg: {type: String, default: '' }
 });
 
+var DefineSchema = new Schema({
+    did: ObjectId,  // definition id
+    def: {type: String, required: true},  // definition
+    ex: {type: String, default: ''},  // examples
+    uv: {type: Number, default: 0},  // upvotes
+    dv: {type: Number, default: 0}  // downvotes
+});
+
 var WordSchema = new Schema({
     wid: ObjectId,
     word: {type: String, required: true},
-    define: {type: String, required: true},
-    example: {type: String, default: ''},
-    uv: {type: Number, default: 0},
-    dv: {type: Number, default: 0}
+    defs: [DefineSchema]
 });
 
 mongoose.connect('mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_URL+'/'+process.env.MONGO_DB);
@@ -53,7 +58,7 @@ app.configure(function() {
 
 function checkSetId(req, res) {
     if (!req.cookies.id) {
-	var newid = uuid.v4()
+	var newid = uuid.v4();
 	res.cookie('id', newid);
 	addEvent("newVisit", "by id:"+newid);
     } else {
@@ -94,13 +99,13 @@ app.get("/addword", function(req, res) {
 function addWord(wordData, req) {
     var newWord = new WordModel();
     newWord.word = wordData.word;
-    newWord.define = wordData.define;
-    newWord.example = wordData.example;
+    newWord.defs.push({ def: wordData.define, ex: wordData.example });
     newWord.save(function(err){
+        console.log(err);
 	if (!err) {
 	    addEvent("addWord", "by id:"+req.cookies.id+";word:"+wordData.word);
 	} else {
-	    addEvent("addWordError", error);
+	    addEvent("addWordError", err);
 	}
     });
 }; 
@@ -114,6 +119,45 @@ app.post("/addword", function(req, res) {
 	       { title: "Add new word",
 		 newword: wordData
 	       });
+});
+
+// New definition form
+app.get("/adddef/:id", function(req, res) {
+    checkSetId(req, res);
+    var id = req.params.id;
+    WordModel.findOne({"_id": id}, function (err, doc) {
+	if (!err) {
+	    res.render('adddef.ejs',
+		       { title: "Add definition: "+doc.word,
+			 word: doc
+		       });
+	}
+    });
+});
+
+function addDefinition(id, wordData, req) {
+    WordModel.findOne({"_id": id}, function (err, doc) {
+	doc.defs.push({ def: wordData.define, ex: wordData.example });
+	doc.save(function(err){
+	    console.log(err);
+	    if (!err) {
+		addEvent("addDef", "by id:"+req.cookies.id+";word:"+wordData.word);
+	    } else {
+		addEvent("addDefError", err);
+	    }
+	});
+    });
+};
+
+// Actually adding new definition
+app.post("/adddef/:id", function(req, res) {
+    checkSetId(req, res);
+    var id = req.params.id;
+    var wordData = req.body;
+    if (wordData.define) {
+	addDefinition(id, wordData, req);
+    }
+    res.redirect('/word/'+id);
 });
 
 app.get("/monitor", function(req, res) {
