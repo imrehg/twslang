@@ -4,6 +4,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , uuid = require('node-uuid')
   , async = require('async')
+  , us = require('underscore')
   ;
 
 var Schema = mongoose.Schema
@@ -224,6 +225,12 @@ app.get("/monitor", function(req, res) {
 		var newdef = docs.length;
 		cb(null, {"New definitions": newdef});
 	    });
+	},
+	function(cb){
+	    EventModel.find({"event": "viewTop10"}, function(err, docs) {
+		var newdef = docs.length;
+		cb(null, {"View Top 10": newdef});
+	    });
 	}
     ],
 		   function(err, results) {
@@ -238,6 +245,30 @@ app.get("/monitor", function(req, res) {
 		   });
 });
 
+app.get("/top10", function(req, res) {
+    WordModel.find({}, function(err, docs) {
+        if ((!err) && (docs)) {
+	    var list = us.sortBy(docs,
+				 function(doc) {
+				     var balance = us.map(doc.defs,
+							  function (def) {
+							      return def.uv - def.dv;
+							  });
+				     return -1 * us.reduce(balance, function(memo, num){ return memo + num; }, 0);
+				 });
+	    var result = (list.length > 9) ? list.slice(0, 10) : list
+	    res.render('top10.ejs',
+		       {
+			   words: result,
+		           title: "Top10"
+		       }
+		      );
+	    addEvent("viewTop10", "by id:"+req.cookies.id+";");
+	} else if (err) {
+	    res.send(err);
+	}
+    });
+});
 
 // Main page
 app.get("/", function(req, res) {
