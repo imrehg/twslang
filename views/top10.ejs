@@ -1,0 +1,35 @@
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">台灣俚語字典 TaiwanSlang</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+<header class="jumbotron subhead" id="head">
+  <h1>The Taiwanese Slang Dictionary</h1>
+  <p class="lead"></p>
+  <div class="row">
+   <div class="span2"><a class="btn btn-info" href="/addWord"><i class="icon-plus icon-white"></i><strong>Add new word</strong></a></div>
+   <div class="span2"><a class="btn btn-inverse" href="/"><i class="icon-backward icon-white"></i>Back to dictionary</a></div>
+   <!-- <div class="span2"><a class="btn btn-warning" href="/random">Go to random word</a></div> -->
+  </div>
+</header>
+
+<section id="main">
+<div class="page-header"><h1>Top10</h1></div>
+<% for (i=0; i < words.length; i++) { %>
+<div class="row">
+ <div class="span1 top10head"><span class="badge badge-info top10num"><%= i+1 %></span></div>
+ <div class="span11"><div class="worddiv"><a href="/word/<%= words[i]._id %>"><%= words[i].word %></a></div></div>
+</div>
+<% } %>
+</section>
+
+
+<div class="container">
