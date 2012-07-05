@@ -26,7 +26,7 @@ var EventSchema = new Schema({
 });
 
 var DefineSchema = new Schema({
-    did: ObjectId,  // definition id
+    did: {type: ObjectId, index: true}, // definition id
     def: {type: String, required: true},  // definition
     ex: {type: String, default: ''},  // examples
     uv: {type: Number, default: 0},  // upvotes
@@ -160,28 +160,39 @@ app.post("/adddef/:id", function(req, res) {
     res.redirect('/word/'+id);
 });
 
+// Get them votes
+app.get("/vote/:wid/:did", function(req, res) {
+    var wid = req.params.wid,
+        did = req.params.did;
+    WordModel.findOne( {"defs._id": did}, function(err, doc) {
+	var result = {success: false, wordid: wid, definitionid: did};
+	if ((!err) && (doc)) {
+	    var def = doc.defs.id(did);
+	    result['success'] = true;
+	    result['upvote'] = def.uv;
+	    result['downvote'] = def.dv;
+	} else if (err) {
+	    console.log(err);
+	}
+	res.send(result);
+    });
+});
+
+// Cast vote
 app.post("/vote/:wid/:did", function(req, res) {
     checkSetId(req, res);
     var wid = req.params.wid,
         did = req.params.did;
     var voteup = req.body.up;
-    var change = (voteup == 'true') ? { $inc : { uv : 1 }} : { $inc : { dv : 1 }}
-    WordModel.findOne( { _id : wid }, function(err, doc) {
-	if (!err) {
-	    console.log(doc.defs.id(did).uv.$inc());
-	    console.log(doc.defs.id(did).uv);
-	    if (voteup == 'true') {
-		doc.defs.id(did).uv.$inc();
-	    } else {
-		doc.defs.id(did).dv.$inc();
-	    }
-	    doc.save(function(err) {
-		console.log(err);
-		console.log(doc);
-	    });
-	}
-    })
-    res.send({success: true});
+    var update = (voteup == 'true') ? { $inc : { "defs.$.uv" : 1 }} : { $inc : { "defs.$.dv" : 1 }};
+    var query = {'_id': wid, 'defs': {$elemMatch : {'_id' : did}}};
+    var options = {};
+    WordModel.update(query,
+		     update,
+		     options,
+		     function(err, updated) {
+			 res.send({updated: updated, error: err});
+		     });
 })
 
 
