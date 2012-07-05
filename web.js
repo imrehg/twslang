@@ -192,6 +192,9 @@ app.post("/vote/:wid/:did", function(req, res) {
 		     options,
 		     function(err, updated) {
 			 res.send({updated: updated, error: err});
+			 if ((!err) && (updated > 0)) {
+			     addEvent("castVote", "by id:"+req.cookies.id+";def:"+did);
+			 }
 		     });
 })
 
