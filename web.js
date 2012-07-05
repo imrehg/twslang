@@ -141,7 +141,7 @@ function addDefinition(id, wordData, req) {
 	doc.save(function(err){
 	    console.log(err);
 	    if (!err) {
-		addEvent("addDef", "by id:"+req.cookies.id+";word:"+wordData.word);
+		addEvent("addDef", "by id:"+req.cookies.id+";wid:"+wordData.wid);
 	    } else {
 		addEvent("addDefError", err);
 	    }
