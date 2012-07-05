@@ -212,6 +212,18 @@ app.get("/monitor", function(req, res) {
 		var wordviews = docs.length;
 		cb(null, {"Words added": wordviews});
 	    });
+	},
+	function(cb){
+	    EventModel.find({"event": "castVote"}, function(err, docs) {
+		var votes = docs.length;
+		cb(null, {"Votes cast": votes});
+	    });
+	},
+	function(cb){
+	    EventModel.find({"event": "addDef"}, function(err, docs) {
+		var newdef = docs.length;
+		cb(null, {"New definitions": newdef});
+	    });
 	}
     ],
 		   function(err, results) {
