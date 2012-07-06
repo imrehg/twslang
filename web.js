@@ -204,44 +204,68 @@ app.get("/monitor", function(req, res) {
     async.parallel([
 	function(cb){
 	    EventModel.find({"event": "checkWord"}, function(err, docs) {
-		var wordviews = docs.length;
-		cb(null, {"Word views": wordviews});
+		if (!err) {
+		    var wordviews = docs.length;
+		    cb(null, {"Word views": wordviews});
+		} else {
+		    cb(err, null);
+		}
 	    });
 	},
 	function(cb){
 	    EventModel.find({"event": "addWord"}, function(err, docs) {
-		var wordviews = docs.length;
-		cb(null, {"Words added": wordviews});
+		if (!err) {
+		    var wordadd = docs.length;
+		    cb(null, {"Words added": wordadd});
+		} else {
+		    cb(err, null);
+		}
 	    });
 	},
 	function(cb){
 	    EventModel.find({"event": "castVote"}, function(err, docs) {
-		var votes = docs.length;
-		cb(null, {"Votes cast": votes});
+		if (!err) {
+		    var votes = docs.length;
+		    cb(null, {"Votes cast": votes});
+		} else {
+		    cb(err, null);
+		}
 	    });
 	},
 	function(cb){
 	    EventModel.find({"event": "addDef"}, function(err, docs) {
-		var newdef = docs.length;
-		cb(null, {"New definitions": newdef});
+		if (!err) {
+		    var newdef = docs.length;
+		    cb(null, {"New definitions": newdef});
+		} else {
+		    cb(err, null);
+		}
 	    });
 	},
 	function(cb){
 	    EventModel.find({"event": "viewTop10"}, function(err, docs) {
-		var newdef = docs.length;
-		cb(null, {"View Top 10": newdef});
+		if (!err) {
+		    var newdef = docs.length;
+		    cb(null, {"View Top 10": newdef});
+		} else {
+		    cb(err, null);
+		}
 	    });
 	}
     ],
 		   function(err, results) {
-		       var out = '<html><head><title>Metrics</title></head><body>';
-		       for (i in results) {
-			   for (resname in results[i]) {
-			       out += "<strong>" + resname + ":</strong> " + results[i][resname] + "<br>";
+                       if (!err) {
+			   var out = '<html><head><title>Metrics</title></head><body>';
+			   for (i in results) {
+			       for (resname in results[i]) {
+				   out += "<strong>" + resname + ":</strong> " + results[i][resname] + "<br>";
+			       }
 			   }
+			   out += "</body><html>"
+			   res.send(out);
+		       } else {
+			   res.send(err);
 		       }
-		       out += "</body><html>"
-		       res.send(out);
 		   });
 });
 
