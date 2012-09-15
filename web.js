@@ -297,11 +297,16 @@ app.get("/top10", function(req, res) {
 // Main page
 app.get("/", function(req, res) {
     checkSetId(req, res);
-    WordModel.find({}, ['_id', 'word', 'define'], function (err, docs) {
+    WordModel.find({}).select('_id word define').exec(function (err, docs) {
 	if (!err) {
 	    res.render('index.ejs',
 		       { title: "台灣俚語字典 TaiwanSlang",
 			 words: docs
+		       });
+	} else {
+	    res.render('index.ejs',
+		       { title: "台灣俚語字典 TaiwanSlang",
+			 words: {}
 		       });
 	}
     });
