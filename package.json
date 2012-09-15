@@ -11,15 +11,15 @@
     "url": "git://github.com/imrehg/twslang.git"
   },
   "dependencies": {
-    "ejs":       "0.7.2"
-  , "express":   "2.5.10"
-  , "mongoose": "2.7.0"
+    "ejs":       "0.8.3"
+  , "express":   "2.5.11"
+  , "mongoose": "3.1.2"
   , "node-uuid": "1.3.3"
   , "async": "0.1.22"
   , "underscore": "1.3.3"
   },
   "engines": {
-    "node": "0.8.1"
-  , "npm":  "1.1.9"
+    "node": "0.8.8"
+  , "npm":  "1.1.49"
   }
 }
